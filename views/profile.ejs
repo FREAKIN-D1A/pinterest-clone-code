@@ -1,0 +1,82 @@
+<% include ./partials/header.ejs %>
+<div class="profile w-full min-h-screen bg-zinc-800 text-white pt-1">
+  <form
+    id="uploadform"
+    hidden
+    action="/fileupload"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <input type="file" name="image" />
+  </form>
+  <div class="profdets flex flex-col items-center mt-20">
+    <div class="relative">
+      <span
+        id="uploadicon"
+        class="w-8 h-8 absolute bottom-0 right-0 rounded-full flex items-center justify-center bg-zinc-200"
+      >
+        <i class="text-zinc-700 ri-pencil-fill"></i>
+      </span>
+
+      <div class="w-32 h-32 bg-zinc-200 rounded-full overflow-hidden">
+        <img
+          class="h-full w-full object-cover"
+          src="/images/uploads/<%= user.profileImage %>"
+          alt=""
+        />
+      </div>
+    </div>
+    <h1 class="text-3xl font-semibold mt-5"><%=user.fullname%></h1>
+    <h3 class="text-md">&#64;<%=user.username%></h3>
+    <a
+      href="/edit"
+      class="px-10 py-3 bg-zinc-700 rounded-full text-xs font-semibold mt-5"
+    >
+      Edit</a
+    >
+    <button id="addPostBtn" class="px-10 py-2 rounded-full bg-red-600 mt-2" >
+      Add New Post
+    </button>
+  </div>
+
+  <div class="cards flex flex-wrap gap-10 px-10 mt-5">
+  <% user.posts.forEach(post => { %>
+    <div class="card mb-3 w-1/5">
+      <div class="card-body ">
+        <h5 class="card-title"><%= post.title %></h5>
+        <p class="card-text"><%= post.description %></p>
+        <img src="/images/uploads/<%= post.image %>" class="img-fluid " alt="Post Image">
+        <div class="w-full flex flex-row justify-between">
+        <a href="/posts/<%= post._id %>/edit" class="btn btn-primary px-10 py-2 rounded-full bg-red-600 mt-2">Edit</a>
+        <form action="/posts/<%= post._id %>/delete" method="POST" class="d-inline">
+          <button type="submit" class="btn btn-danger px-10 py-2 rounded-full bg-red-600 mt-2">Delete</button>
+        </form>
+        </div>
+      
+      </div>
+    </div>
+  <% }); %>
+    <!-- <div class="card">
+      <div class="w-52 h-40 bg-zinc-200 rounded-md overflow-hidden"></div>
+      <h3 class="text-xl font-semibold mt-3">All Pins</h3>
+      <h5 class="text-sm font-semibold opacity-80">28 Pins</h5>
+    </div>
+  </div> -->
+</div>
+
+<script>
+  document.querySelector("#uploadicon").addEventListener("click", function () {
+    document.querySelector("#uploadform input").click();
+  });
+  document
+    .querySelector("#uploadform input")
+    .addEventListener("change", function () {
+      document.querySelector("#uploadform").submit();
+    });
+
+  document.getElementById("addPostBtn").addEventListener("click", function () {
+    window.location.href = "/add";
+  });
+</script>
+
+<% include ./partials/footer.ejs %>
